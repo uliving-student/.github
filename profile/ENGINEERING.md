@@ -11,12 +11,10 @@ Nosso objetivo é garantir:
 
 ---
 
-# 🌳 Git Workflow
-
-Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
-
 ## Fluxo
 ## 🌳 Git Workflow (master → stage → master)
+
+Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
 
 ```mermaid
 gitGraph
