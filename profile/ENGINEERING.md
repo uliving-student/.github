@@ -18,19 +18,25 @@ Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando 
 
 ```mermaid
 gitGraph
-   commit id: "master"
+   commit id: "initial commit"
 
-   branch hotfix/ULI-500
-   checkout hotfix/ULI-500
-   commit id: "fix prod bug"
+   branch stage
+   checkout stage
+   commit id: "stage baseline"
+
+   checkout main
+   branch feature/ULI-123
+   checkout feature/ULI-123
+   commit id: "development"
+   commit id: "feature ready"
 
    checkout stage
-   merge hotfix/ULI-500
-   commit id: "validate in stage"
+   merge feature/ULI-123
+   commit id: "deploy stage"
 
-   checkout master
+   checkout main
    merge stage
-   commit id: "deploy hotfix"
+   commit id: "deploy production"
 ```
 
 ---
