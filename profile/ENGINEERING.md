@@ -15,27 +15,25 @@ Nosso objetivo é garantir:
 
 ## 🌳 Git Workflow (stage como ambiente de validação)
 
+
 ```mermaid
 gitGraph
-    commit id: "master"
+   commit id: "initial"
 
-    branch stage
-    checkout stage
-    commit id: "stage baseline"
+   branch stage
+   branch feature/ULI-123
 
-    checkout master
-    branch feature/ULI-123
-    checkout feature/ULI-123
-    commit id: "development"
-    commit id: "feature ready"
+   checkout feature/ULI-123
+   commit id: "development"
+   commit id: "feature ready"
 
-    checkout stage
-    merge feature/ULI-123
-    commit id: "deploy stage"
+   checkout stage
+   merge feature/ULI-123
+   commit id: "deploy stage"
 
-    checkout master
-    merge feature/ULI-123
-    commit id: "deploy production"
+   checkout main
+   merge feature/ULI-123
+   commit id: "deploy production"
 ```
 ## 🌳 Git Workflow (master → stage → master)
 
