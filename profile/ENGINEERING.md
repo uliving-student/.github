@@ -20,22 +20,17 @@ Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando 
 gitGraph
    commit id: "master"
 
-   branch feature/ULI-123
-   checkout feature/ULI-123
-   commit id: "development"
-   commit id: "feature complete"
+   branch hotfix/ULI-500
+   checkout hotfix/ULI-500
+   commit id: "fix prod bug"
 
-   checkout master
-   branch stage
    checkout stage
-   commit id: "stage baseline"
-
-   merge feature/ULI-123
-   commit id: "deploy stage"
+   merge hotfix/ULI-500
+   commit id: "validate in stage"
 
    checkout master
    merge stage
-   commit id: "deploy production"
+   commit id: "deploy hotfix"
 ```
 
 ---
