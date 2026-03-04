@@ -1,161 +1,338 @@
+# 🧭 Engenharia de Software — uliving
 
-# 🧭 Guia de Engenharia — uliving
+Este documento define os padrões de engenharia adotados pelo departamento de tecnologia da **uliving**.
 
-Este documento define padrões mínimos para manter **qualidade, previsibilidade e velocidade** no desenvolvimento.
+Nosso objetivo é garantir:
 
-> Regra de ouro: **se não está testável, revisável e observável, não está pronto.**
-
----
-
-## 🌿 Padrão de Branch (Jira)
-
-Toda branch deve estar vinculada a um ticket do Jira.
-
-### Formato
-
-`<tipo>/ULI-<id>-<descricao-curta>`
-
-### Exemplos
-
-- `feature/ULI-245-criar-endpoint-reservas`
-- `fix/ULI-310-corrigir-bug-checkout`
-- `refactor/ULI-522-refatorar-servico-pagamentos`
-- `chore/ULI-400-ajustar-eslint`
-
-### Tipos permitidos
-
-- `feature` → nova funcionalidade
-- `fix` → correção de bug
-- `hotfix` → correção urgente em produção
-- `refactor` → refatoração sem mudança de comportamento esperado
-- `chore` → tarefas técnicas/infra/ajustes
-- `docs` → documentação
-- `test` → ajustes de testes
+- qualidade de código
+- previsibilidade no desenvolvimento
+- facilidade de manutenção
+- escalabilidade dos sistemas
 
 ---
 
-## 🧾 Commits (recomendado)
+# 🌳 Git Workflow
 
-Recomendamos **Conventional Commits** para facilitar changelog e automações:
+Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
 
-`<tipo>(escopo opcional): mensagem`
+## Fluxo
 
-Exemplos:
+```mermaid
+gitGraph
+   commit id: "main"
+   branch staging
+   checkout staging
+   commit id: "staging environment"
 
-- `feat(reservas): criar endpoint de consulta`
-- `fix(checkout): corrigir cálculo de desconto`
-- `chore(ci): ajustar pipeline`
+   branch feature/ULI-123
+   checkout feature/ULI-123
+   commit id: "development"
+   commit id: "feature complete"
 
-Tipos comuns: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`.
+   checkout staging
+   merge feature/ULI-123
+   commit id: "deploy staging"
 
----
-
-## 🔀 Pull Request (PR)
-
-Todo código deve passar por PR antes de ir para a branch principal.
-
-### Requisitos mínimos
-
-- Link do ticket Jira (ex.: `ULI-123`)
-- Descrição clara do problema e da solução
-- Build/linters OK
-- Testes atualizados (ou justificativa explícita quando não aplicável)
-- 1+ aprovação (ou política do time)
-- Sem segredos no código (tokens/keys)
-
-### Checklist de qualidade
-
-- [ ] Código legível (nomes bons, funções pequenas)
-- [ ] Sem duplicação desnecessária
-- [ ] Tratamento de erros consistente
-- [ ] Logs/observabilidade adequados (quando aplicável)
-- [ ] Migrações versionadas (quando aplicável)
-- [ ] Impacto em performance e custo considerado (quando aplicável)
-
-### Como escrever uma boa descrição de PR
-
-Inclua:
-
-1. **Contexto:** o que motivou a mudança
-2. **O que foi feito:** bullets objetivos
-3. **Como testar:** passo a passo
-4. **Evidências:** prints/gifs/logs quando for UI
-5. **Riscos e mitigação:** migrações, rollback, flags
-
-> Dica: PR pequeno é PR rápido.
+   checkout main
+   merge staging
+   commit id: "production release"
+```
 
 ---
 
-## 🧼 Clean Code (padrões mínimos)
+## Processo de desenvolvimento
 
-### Nomes intencionais
+1. Criar branch a partir de **staging**
 
-- Variáveis e funções devem dizer **o que** fazem, não **como**
-- Evite abreviações obscuras
-- Prefira `calculateMonthlyInvoice()` a `calcInv()`
+```
+feature/ULI-123-descricao
+```
+
+2. Desenvolver a funcionalidade
+
+3. Abrir Pull Request para **staging**
+
+4. Após merge em staging:
+
+- deploy automático em staging
+- validação funcional
+- testes
+
+5. Após validação:
+
+```
+merge staging → main
+```
+
+6. Deploy em produção
+
+---
+
+# 🌿 Padrão de Branch
+
+Toda branch deve estar vinculada a um ticket do **Jira**.
+
+## Formato
+
+```
+tipo/ULI-123-descricao-curta
+```
+
+## Exemplos
+
+```
+feature/ULI-245-criar-endpoint-reservas
+fix/ULI-310-corrigir-bug-checkout
+refactor/ULI-500-refatorar-servico-pagamentos
+chore/ULI-120-ajustar-eslint
+```
+
+## Tipos permitidos
+
+| Tipo | Descrição |
+|-----|-----|
+| feature | nova funcionalidade |
+| fix | correção de bug |
+| refactor | refatoração |
+| chore | tarefas técnicas |
+| docs | documentação |
+| hotfix | correção urgente |
+
+---
+
+# 🔀 Pull Requests
+
+Todo código deve passar por **Pull Request** antes de ser integrado.
+
+## Requisitos obrigatórios
+
+- branch atualizada com staging
+- CI passando
+- descrição clara da mudança
+- link do ticket Jira
+- pelo menos **1 aprovação**
+
+---
+
+## Estrutura de PR
+
+Um bom PR deve conter:
+
+### Contexto
+
+Explique o problema.
+
+### O que foi feito
+
+Lista objetiva das mudanças.
+
+### Como testar
+
+Passo a passo de validação.
+
+### Evidências
+
+Screenshots ou logs quando necessário.
+
+---
+
+# 🚑 Hotfix
+
+Correções críticas podem ser feitas diretamente a partir de `main`.
+
+```mermaid
+gitGraph
+   checkout main
+   branch hotfix/ULI-500
+   commit id: "fix production bug"
+
+   checkout main
+   merge hotfix/ULI-500
+   commit id: "deploy hotfix"
+
+   checkout staging
+   merge main
+```
+
+Após aplicar o hotfix em produção, **staging deve ser sincronizado**.
+
+---
+
+# 🧼 Clean Code
+
+Seguimos princípios de **Clean Code** para manter o código legível e sustentável.
+
+## Princípios
+
+### Nomes descritivos
+
+Prefira:
+
+```
+calculateInvoiceTotal()
+```
+
+Evite:
+
+```
+calcInv()
+```
+
+---
 
 ### Funções pequenas
 
-- Uma função deve ter **um motivo** para mudar (SRP)
-- Se ficou difícil de nomear, provavelmente faz coisa demais
-
-### Evite estados implícitos
-
-- Prefira passar dados como parâmetros
-- Evite dependências globais e efeitos colaterais escondidos
-
-### DRY com cuidado
-
-- Não abstraia cedo demais
-- Extraia duplicações quando houver **padrão claro**, não só coincidência
-
-### Erros são parte do fluxo
-
-- Trate erros explicitamente
-- Crie mensagens úteis para debug
-- Em APIs: respostas consistentes (status + payload)
+Uma função deve ter **uma única responsabilidade**.
 
 ---
 
-## 🧪 Testes
+### Evitar duplicação
 
-### O que testamos
-
-- **Unitários:** regras de negócio e validações
-- **Integração:** endpoints, repositórios, filas, jobs
-- **Contrato:** integrações com serviços externos quando fizer sentido
-
-### Princípios
-
-- Teste deve ser **determinístico**
-- Evite testes frágeis de UI; priorize testes de comportamento
-- Dê preferência a testes no **domínio/casos de uso**
+Siga o princípio **DRY (Don't Repeat Yourself)**.
 
 ---
 
-## 🔐 Segurança (mínimo)
+### Baixo acoplamento
 
-- Nunca commitar secrets (use variáveis de ambiente/secret manager)
-- Validar inputs (DTOs/validators)
-- Sanitizar logs (não logar dados sensíveis)
-- Dependências atualizadas (patches de segurança)
+Componentes devem ser independentes sempre que possível.
 
 ---
 
-## 📦 Versionamento e Releases (sugestão)
+### Alta coesão
 
-- SemVer quando aplicável (principalmente bibliotecas)
-- Changelog automatizado via Conventional Commits (opcional)
-- Deploy com tags/versões rastreáveis
+Cada módulo deve ter responsabilidade clara.
 
 ---
 
-## ✅ Definition of Done (DoD)
+# 🏗️ Clean Architecture
 
-Uma tarefa só é “done” quando:
+Adotamos princípios de **Clean Architecture**.
 
-- Implementação concluída e revisada
-- Testes adequados e pipeline verde
-- Observabilidade básica (logs/alerts quando necessário)
-- Documentação atualizada (quando necessário)
-- Ticket Jira com evidências de validação (quando aplicável)
+## Camadas
+
+```
+Presentation
+Application
+Domain
+Infrastructure
+```
+
+---
+
+## Domain
+
+Contém regras de negócio puras.
+
+Exemplos:
+
+- entidades
+- value objects
+- regras de negócio
+
+Não deve depender de frameworks.
+
+---
+
+## Application
+
+Contém os **casos de uso**.
+
+Responsável por orquestrar o domínio.
+
+---
+
+## Infrastructure
+
+Implementações técnicas:
+
+- banco de dados
+- mensageria
+- APIs externas
+
+---
+
+## Presentation
+
+Camada de entrada:
+
+- controllers
+- APIs
+- interfaces
+
+---
+
+## Regra principal
+
+Dependências sempre apontam **para dentro**.
+
+```
+Presentation → Application → Domain
+Infrastructure → Application
+```
+
+---
+
+# 🧪 Testes
+
+Tipos de testes recomendados:
+
+### Unitários
+
+Validam regras de negócio.
+
+### Integração
+
+Validam comunicação entre serviços.
+
+---
+
+## Boas práticas
+
+- testes determinísticos
+- evitar dependência de infraestrutura real
+- priorizar testes de domínio
+
+---
+
+# 📦 Versionamento
+
+Utilizamos versionamento baseado em **SemVer**.
+
+```
+MAJOR.MINOR.PATCH
+```
+
+---
+
+# 🔐 Segurança
+
+Boas práticas:
+
+- nunca commitar secrets
+- validar inputs
+- sanitizar logs
+- manter dependências atualizadas
+
+---
+
+# ✅ Definition of Done
+
+Uma tarefa é considerada concluída quando:
+
+- código implementado
+- testes atualizados
+- PR aprovado
+- CI passando
+- deploy validado em staging
+- documentação atualizada quando necessário
+
+---
+
+# 🚀 Cultura de Engenharia
+
+Na uliving acreditamos que:
+
+- código é responsabilidade coletiva
+- refatoração é parte do trabalho
+- qualidade é prioridade
+- documentação faz parte da entrega
