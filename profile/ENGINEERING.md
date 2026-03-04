@@ -147,28 +147,6 @@ Screenshots ou logs quando necessário.
 
 ---
 
-# 🚑 Hotfix
-
-Correções críticas podem ser feitas diretamente a partir de `main`.
-
-```mermaid
-gitGraph
-   checkout main
-   branch hotfix/ULI-500
-   commit id: "fix production bug"
-
-   checkout main
-   merge hotfix/ULI-500
-   commit id: "deploy hotfix"
-
-   checkout staging
-   merge main
-```
-
-Após aplicar o hotfix em produção, **staging deve ser sincronizado**.
-
----
-
 # 🧼 Clean Code
 
 Seguimos princípios de **Clean Code** para manter o código legível e sustentável.
