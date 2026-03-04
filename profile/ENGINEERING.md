@@ -16,26 +16,28 @@ Nosso objetivo é garantir:
 Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
 
 ## Fluxo
+## 🌳 Git Workflow (master → stage → master)
 
 ```mermaid
 gitGraph
-   commit id: "main"
-   branch staging
-   checkout staging
-   commit id: "staging environment"
+   commit id: "master"
 
    branch feature/ULI-123
    checkout feature/ULI-123
    commit id: "development"
    commit id: "feature complete"
 
-   checkout staging
-   merge feature/ULI-123
-   commit id: "deploy staging"
+   checkout master
+   branch stage
+   checkout stage
+   commit id: "stage baseline"
 
-   checkout main
-   merge staging
-   commit id: "production release"
+   merge feature/ULI-123
+   commit id: "deploy stage"
+
+   checkout master
+   merge stage
+   commit id: "deploy production"
 ```
 
 ---
