@@ -17,20 +17,13 @@ Nosso objetivo é garantir:
 Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
 
 ```mermaid
-gitGraph
-  commit id: "master"
-
-  branch feature/ULI-123
-  checkout feature/ULI-123
-  commit id: "development"
-  commit id: "feature ready"
-
-  checkout master
-  commit id: "PR feature → stage (deploy stage)"
-  commit id: "QA/validação em stage"
-
-  merge feature/ULI-123
-  commit id: "PR feature → master (deploy produção)"
+flowchart TB
+  A[Branch feature/ULI-123<br/>base: master] --> B[PR: feature → stage]
+  B --> C[Deploy automático no ambiente stage]
+  C --> D[QA / Testes / Validação]
+  D -->|Aprovado| E[PR: feature → master]
+  E --> F[Deploy automático em produção]
+  D -->|Reprovado| A
 ```
 
 ---
