@@ -1,13 +1,6 @@
-name: PR Release
-
+# .github/workflows/pr-release.yml
 on:
-  pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
-    branches:
-      - staging
+  workflow_call:
 
 permissions:
   contents: read
