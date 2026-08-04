@@ -1,30 +1,34 @@
-## 🎫 Jira
+## Ticket
 
-- CARD: ULT-\_\_\_
+- Jira: ULI-___
 
-## 🧩 Contexto
+## Contexto
 
-Explique o problema e por que esta mudança é necessária.
+<!-- Qual problema esta alteração resolve e por que ela é necessária? -->
 
-## ✅ O que foi feito
+## O que foi feito
 
-- [ ] Item 1
-- [ ] Item 2
+-
 
-## 🧪 Como testar
+## Como testar
 
-1. Passo 1
-2. Passo 2
+1.
 
-## 📸 Evidências (quando aplicável)
+## Evidências
 
-- Prints/GIFs/logs
+<!-- Prints, GIFs, requests/responses ou logs sanitizados, quando aplicável. -->
 
-## ⚠️ Riscos e mitigação
+## Riscos e mitigação
 
-- Migração? Feature flag? Rollback?
+<!-- Considere API, banco, migrations, segurança, rollback, feature flag e integrações. -->
 
-## ✅ Checklist
+## Checklist
 
-- [ ] Testes adicionados/atualizados (ou justificativa)
-- [ ] Documentação atualizada (se necessário)
+- [ ] Testes necessários foram adicionados ou atualizados; caso contrário, justifiquei a ausência.
+- [ ] Lint, typecheck, testes e build aplicáveis foram executados.
+- [ ] A documentação foi atualizada quando necessário.
+- [ ] Impactos no padrão global possuem TODO e card Jira, ou uma justificativa de não aplicabilidade.
+- [ ] Não foram incluídos segredos nem dados pessoais, financeiros ou de produção.
+- [ ] Migrations novas foram revisadas e nenhuma migration já aplicada foi alterada.
+- [ ] Alterações incompatíveis de API ou eventos foram identificadas e comunicadas.
+- [ ] O plano de rollback foi considerado para mudanças de maior risco.
