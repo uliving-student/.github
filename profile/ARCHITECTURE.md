@@ -1,4 +1,3 @@
-
 # 🏗️ Diretrizes de Arquitetura — uliving
 
 Este documento consolida práticas para manter uma base escalável e de fácil manutenção, inspirada em **Clean Architecture**, **DDD (quando aplicável)** e princípios SOLID.
@@ -34,9 +33,11 @@ Organize o código para que **dependências apontem para dentro**:
 
 ### Dependency Inversion (exemplo)
 
-- Application define uma interface `UserRepository`
-- Infrastructure implementa `PrismaUserRepository` (ou outro)
-- Injeção de dependência liga tudo sem o domínio conhecer o detalhe
+- Repositories de banco estendem o repository base do ORM e são injetados diretamente.
+- Não crie interface/token por entidade apenas por cerimônia arquitetural.
+- Use interface/port quando existir uma fronteira substituível real: múltiplas implementações, SDK,
+  API externa, fila, storage, relógio ou gerador de identificador.
+- Uma possibilidade futura não justifica abstração sem uso atual.
 
 ---
 
@@ -125,3 +126,42 @@ Antes de escolher uma abordagem, responda:
 3. Isso é observável, testável e sustentável?
 
 Se a resposta for “não”, simplifique.
+
+---
+
+## Padrão vigente para back-ends NestJS
+
+Estas regras complementam e, em caso de conflito, prevalecem sobre os exemplos genéricos anteriores:
+
+- Crie um use case quando houver regra, múltiplas etapas, transação, efeito externo, evento ou
+  reutilização independente do transporte. CRUD simples pode permanecer na fachada do módulo.
+- Modules fazem somente composição de dependências.
+- CRUD, paginação, ordenação e filtros genéricos permanecem nos repositories base compartilhados;
+  queries específicas ficam no repository concreto e regra de negócio não pertence ao repository.
+- Cada entidade/schema de persistência e cada repository concreto ficam em arquivos próprios. Em
+  TypeORM, entidades de persistência terminam em `OrmEntity`.
+- Barrels `index.ts` são proibidos para repositories. Importe cada repository diretamente pelo
+  caminho do arquivo para manter explícita a origem da dependência.
+- Decorators TypeORM ficam em linhas próprias, imediatamente acima do atributo, e propriedades ORM
+  declaram explicitamente o modificador `public`.
+- Listagens CRUD usam `findAllApi`; não recrie paginação, ordenação e filtros genéricos quando o
+  repository base atender ao caso.
+- Recursos CRUD reutilizam o controller base e seus endpoints de paginação e consulta por ID. Não o
+  use quando endpoints herdados impedirem autorização, identidade ou visibilidade obrigatórias;
+  justifique a exceção junto ao controller.
+- Todo serviço expõe `GET /health` como rota pública, fora do prefixo global e sem depender de banco
+  ou integrações externas.
+- Eventos públicos incluem `eventId`, `occurredAt`, versão e payload tipado. Consumers são
+  idempotentes, seguros para reentrega e preservam correlation ID quando disponível.
+- Toda regra, transição, comportamento condicional e correção de bug exige teste. Testes unitários
+  ficam em `src/modules/<módulo>/tests/` e espelham o caminho do arquivo testado.
+- A estrutura em camadas é direção para módulos novos ou refatorações autorizadas. Não mova arquivos
+  em massa junto com mudança funcional.
+- Atualize `README.md`, `docs/**`, `.env.example` e o `AGENTS.md` quando mudar contrato, configuração,
+  evento ou fluxo operacional.
+- Todo módulo mantém `src/modules/<módulo>/README.md` com descrição objetiva de responsabilidade,
+  entradas, saídas, regras, dependências, persistência, eventos e efeitos externos.
+- Use Mermaid quando fluxos, sequências, estados, integrações ou dependências ficarem mais claros com
+  diagrama; não use quando uma lista curta for suficiente e mantenha o diagrama sincronizado.
+- Antes de entregar, execute `npm run check`, revise `git diff` e execute `git diff --check`.
+- Não execute migrations, seeds, deploys, consumers ou scripts operacionais sem autorização explícita.

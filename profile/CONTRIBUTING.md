@@ -1,4 +1,3 @@
-
 # 🤝 Contribuindo — uliving
 
 Este guia descreve como colaborar nos repositórios da uliving.
@@ -7,7 +6,7 @@ Este guia descreve como colaborar nos repositórios da uliving.
 
 ## ✅ Antes de começar
 
-- Verifique se existe ticket no Jira (ex.: `ULI-123`)
+- Verifique se existe ticket no Jira (ex.: `ULT-123`)
 - Alinhe escopo e critérios de aceitação
 - Confirme impacto em outras squads/sistemas
 

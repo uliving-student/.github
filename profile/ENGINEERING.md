@@ -15,33 +15,33 @@ Nosso objetivo é garantir:
 
 ## 🌳 Git Workflow (stage como ambiente de validação)
 
-
 ```mermaid
 gitGraph
    commit id: "initial"
 
    branch stage
-   branch feature/ULI-123
+   branch feature/ULT-123
 
-   checkout feature/ULI-123
+   checkout feature/ULT-123
    commit id: "development"
    commit id: "feature ready"
 
    checkout stage
-   merge feature/ULI-123
+   merge feature/ULT-123
    commit id: "deploy stage"
 
    checkout main
-   merge feature/ULI-123
+   merge feature/ULT-123
    commit id: "deploy production"
 ```
+
 ## 🌳 Git Workflow (master → stage → master)
 
 Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
 
 ```mermaid
 flowchart TB
-  A[Branch feature/ULI-123<br/>base: master] --> B[PR: feature → stage]
+  A[Branch feature/ULT-123<br/>base: master] --> B[PR: feature → stage]
   B --> C[Deploy automático no ambiente stage]
   C --> D[QA / Testes / Validação]
   D -->|Aprovado| E[PR: feature → master]
@@ -56,7 +56,7 @@ flowchart TB
 1. Criar branch a partir de **staging**
 
 ```
-feature/ULI-123-descricao
+feature/ULT-123-descricao
 ```
 
 2. Desenvolver a funcionalidade
@@ -86,28 +86,28 @@ Toda branch deve estar vinculada a um ticket do **Jira**.
 ## Formato
 
 ```
-tipo/ULI-123-descricao-curta
+tipo/ULT-123-descricao-curta
 ```
 
 ## Exemplos
 
 ```
-feature/ULI-245-criar-endpoint-reservas
-fix/ULI-310-corrigir-bug-checkout
-refactor/ULI-500-refatorar-servico-pagamentos
-chore/ULI-120-ajustar-eslint
+feature/ULT-245-criar-endpoint-reservas
+fix/ULT-310-corrigir-bug-checkout
+refactor/ULT-500-refatorar-servico-pagamentos
+chore/ULT-120-ajustar-eslint
 ```
 
 ## Tipos permitidos
 
-| Tipo | Descrição |
-|-----|-----|
-| feature | nova funcionalidade |
-| fix | correção de bug |
-| refactor | refatoração |
-| chore | tarefas técnicas |
-| docs | documentação |
-| hotfix | correção urgente |
+| Tipo     | Descrição           |
+| -------- | ------------------- |
+| feature  | nova funcionalidade |
+| fix      | correção de bug     |
+| refactor | refatoração         |
+| chore    | tarefas técnicas    |
+| docs     | documentação        |
+| hotfix   | correção urgente    |
 
 ---
 
