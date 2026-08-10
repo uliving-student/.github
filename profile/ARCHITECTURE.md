@@ -165,3 +165,66 @@ Estas regras complementam e, em caso de conflito, prevalecem sobre os exemplos g
   diagrama; não use quando uma lista curta for suficiente e mantenha o diagrama sincronizado.
 - Antes de entregar, execute `npm run check`, revise `git diff` e execute `git diff --check`.
 - Não execute migrations, seeds, deploys, consumers ou scripts operacionais sem autorização explícita.
+
+---
+
+## Evolução de módulos e fronteiras de microserviços
+
+### Estrutura evolutiva
+
+- Todo projeto possui uma organização raiz explícita dentro de `src`: `src/core/` para componentes
+  compartilhados/transversais e `src/modules/<módulo>/` para contextos de negócio.
+- Essa regra também vale para o repositório chamado `core`: nele, o código compartilhado da aplicação
+  fica sob `src/core/`; o nome do repositório não elimina essa pasta pai.
+- `src/core/` pode conter `application`, `domain` e `infrastructure` compartilhados pelo serviço, mas
+  não recebe regras pertencentes a um módulo específico.
+- Não crie estruturas paralelas como `src/infra`, `src/common` ou `src/shared` para contornar essa
+  organização. Código realmente transversal deve ser classificado dentro de `src/core/`.
+- Código novo em módulos antigos segue a estrutura pragmática de Clean Architecture:
+  `application`, `domain`, `infrastructure`, `presentation` e `tests`.
+- Não perpetue uma organização antiga apenas porque o módulo ainda não foi migrado.
+- Não mova arquivos antigos sem necessidade. Migre gradualmente quando forem alterados de forma
+  relevante e mantenha a mudança revisável, sem misturar reorganização massiva com regra nova.
+- Use cases ficam em `application`; regras e invariantes em `domain`; ORM, filas e providers em
+  `infrastructure`; controllers, DTOs e subscribers de entrada em `presentation`.
+
+### Comunicação entre módulos
+
+- Um módulo nunca injeta nem chama o repository de outro módulo.
+- Comunicação interna ocorre pelo service ou fachada pública exportada pelo módulo proprietário.
+- Apenas o módulo proprietário conhece seus repositories e detalhes de persistência.
+- Não use imports profundos para contornar a API pública do módulo.
+- Se houver ciclo entre módulos, reveja responsabilidades; não use `forwardRef` como solução padrão.
+
+### Desacoplamento entre microserviços
+
+- Cada microserviço mantém suas regras, persistência e decisões dentro da própria fronteira.
+- Não compartilhe banco, entidades ORM, repositories nem relações de banco entre serviços.
+- Integrações usam contratos HTTP/eventos versionados, IDs externos e snapshots mínimos quando
+  necessários. O serviço proprietário continua sendo a fonte da verdade.
+- Prefira consistência eventual e idempotência a acoplamento transacional distribuído.
+- Quanto mais uma regra puder ser resolvida dentro de um único serviço, menor deve ser o acoplamento
+  necessário com os demais.
+
+### Identificação por `code`
+
+- Todo registro relevante de negócio compartilhado ou referenciado entre microserviços possui um
+  `code` estável, único no contexto e independente do ID interno do banco.
+- O mesmo objeto de negócio usa o mesmo `code` em todos os serviços que mantêm referência ou
+  projeção dele. Por exemplo, um cliente com `code` `xxxxx` conserva esse valor no `core`, no
+  `usupport` e nos demais consumidores.
+- IDs internos (`id`, `_id`) não são contratos entre serviços. Use `code` em eventos, integrações,
+  correlação, idempotência e reconciliação.
+- O serviço proprietário gera o `code`; consumidores apenas o preservam. Não gere outro código para
+  representar o mesmo registro e não altere um `code` já publicado sem estratégia de migração.
+- Defina unicidade e índice para `code` na persistência e valide duplicidade nas fronteiras.
+
+### API única e roteamento
+
+- Embora implementado como microserviços, o back-end é apresentado ao cliente como uma única API.
+- Em desenvolvimento local, o front-end acessa os serviços por proxy, preservando os mesmos paths
+  públicos usados em produção.
+- Em produção, Kubernetes e Ingress Controller roteiam cada requisição ao serviço responsável pelo
+  path. O front-end não conhece endereço interno, porta, pod ou mecanismo de descoberta dos serviços.
+- Paths públicos são contratos da plataforma. Mudança de prefixo ou responsabilidade exige análise
+  de compatibilidade no proxy local, no Ingress e nos consumidores antes do cutover.
