@@ -242,9 +242,18 @@ Use case
 
 ## Documentação
 
-- Todo módulo mantém `src/modules/<módulo>/README.md` objetivo, contendo responsabilidade, entradas,
-  saídas, regras, dependências, persistência, eventos e efeitos externos.
-- Atualize o README do módulo junto com mudanças de funcionamento.
+- Todo módulo mantém sua documentação em um `README.md` localizado diretamente na raiz do próprio
+  módulo: `src/modules/<módulo>/README.md`.
+- Não coloque essa documentação dentro de `application`, `domain`, `infrastructure`, `presentation`
+  ou `tests`, nem crie uma pasta `docs` dentro do módulo apenas para esse conteúdo.
+- O README do módulo deve ser objetivo e conter, conforme aplicável: responsabilidade e limites,
+  entradas e saídas, casos de uso e regras principais, dependências com outros módulos, persistência,
+  endpoints, eventos consumidos/publicados, integrações e efeitos externos.
+- Atualize o README do módulo na mesma alteração sempre que seu comportamento, contrato, fluxo ou
+  dependência mudar.
+- Módulos novos já devem nascer com esse README. Em módulos antigos sem documentação, crie-o quando o
+  módulo receber desenvolvimento novo ou uma alteração relevante; não é necessário documentar todos
+  os módulos não relacionados à tarefa atual.
 - Atualize `README.md`, `docs/**`, `.env.example` e documentação operacional quando mudar contrato,
   configuração, evento, ambiente ou fluxo.
 - Use Mermaid quando fluxo, sequência, estado, integração ou dependência ficar mais claro com
