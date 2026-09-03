@@ -279,18 +279,34 @@ Use case
 
 ## Validação obrigatória
 
-Antes de entregar:
+A validação é proporcional ao risco e ao alcance da alteração. Durante o desenvolvimento e antes de
+entregar uma mudança localizada, execute no mínimo:
 
 ```bash
-npm run typecheck
-npm run lint
-npm test -- --runInBand
-npm run build
 git diff --check
 ```
 
-Prefira `npm run check` quando ele agrupar typecheck, lint, testes e build. Revise também `git diff` e
-informe comandos não executados, warnings e falhas preexistentes.
+- revise o `git diff` completo da tarefa;
+- execute os testes diretamente relacionados aos arquivos, casos de uso e contratos alterados;
+- execute lint nos arquivos alterados, quando o projeto oferecer comando ou suporte para esse
+  escopo;
+- execute `typecheck` ou `build` quando a alteração afetar código compilado. Não é necessário rodar
+  ambos localmente quando os dois validarem a mesma fronteira de compilação;
+- informe comandos não executados, warnings e falhas preexistentes.
+
+Execute lint, testes e build completos localmente quando a mudança afetar componentes transversais,
+configuração de build/teste, dependências, contratos públicos, schema/migrations, autenticação,
+autorização, eventos, concorrência ou vários módulos; execute também quando não houver CI confiável
+cobrindo esses gates.
+
+Correções e mudanças restritas a um módulo não exigem a suíte completa local se os testes focados, a
+checagem de tipos/compilação aplicável e o CI cobrirem o restante. Não use `--runInBand` por padrão;
+reserve execução serial para testes que comprovadamente dependam dela ou para diagnosticar
+instabilidade.
+
+Antes do merge, o CI deve validar no mínimo typecheck, lint, suíte completa de testes e build. Prefira
+`npm run check` quando ele agrupar esses gates. Se o CI não executar algum deles, a lacuna deve ser
+coberta localmente e registrada no PR.
 
 Quando possível, automatize fronteiras arquiteturais no CI; documentação orienta, gate impede
 integração da violação.
