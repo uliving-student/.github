@@ -1,7 +1,8 @@
 # Padrão global de back-ends — uliving
 
-Este documento é a fonte canônica para desenvolvimento e manutenção dos back-ends da uliving. Deve
-ser lido antes do `AGENTS.md` local de cada repositório.
+Este documento é a fonte canônica completa para desenvolvimento e manutenção dos back-ends da
+uliving. O resumo operacional deve ser lido antes do `AGENTS.md` local; este documento completo é
+obrigatório nos cenários de risco definidos abaixo.
 
 Link canônico:
 <https://github.com/uliving-student/.github/blob/main/profile/BACKEND_STANDARDS.md>
@@ -21,7 +22,8 @@ remoção e, quando afetar outros serviços, `TODO(JIRA)` para rollout.
 
 ## Antes de alterar
 
-1. Leia este documento, o `AGENTS.md` local, o README do módulo e o código afetado por completo.
+1. Leia o `BACKEND_STANDARDS_QUICK.md`, o `AGENTS.md` local, o README do módulo e o código afetado.
+   Leia também este padrão completo ao iniciar trabalho no repositório ou nos cenários de risco.
 2. Verifique `git status` e preserve mudanças fora da tarefa.
 3. Procure um padrão semelhante no repositório.
 4. Identifique contratos HTTP/RPC, eventos, migrations, persistência e efeitos operacionais.
@@ -29,15 +31,19 @@ remoção e, quando afetar outros serviços, `TODO(JIRA)` para rollout.
 
 ### Trabalho assistido por IA
 
-- Agentes de código, incluindo Claude Code, Codex, Copilot e equivalentes, devem ler este documento
-  antes de analisar, gerar ou alterar código de backend.
+- Agentes de código, incluindo Claude Code, Codex, Copilot e equivalentes, leem primeiro o
+  [resumo operacional](BACKEND_STANDARDS_QUICK.md). Na retomada da mesma tarefa, não precisam reler
+  documentos que não mudaram.
+- A leitura deste padrão completo é obrigatória no primeiro trabalho do agente no repositório e
+  quando a mudança afetar arquitetura, módulos, persistência, contratos públicos, eventos,
+  migrations, segurança, rebase/merge ou baseline arquitetural.
 - Cada backend mantém na raiz um `AGENTS.md` e um `CLAUDE.md` curtos, apontando para este documento e
   contendo somente contexto e restrições locais. Não mantenha cópias integrais deste padrão nesses
   arquivos, pois elas divergem com o tempo.
 - Se o padrão canônico não estiver acessível, o agente não altera código: informa o bloqueio e pede
   acesso ou uma cópia atualizada.
-- O agente deve conferir as instruções novamente após troca de branch, rebase, merge ou retomada de
-  uma tarefa iniciada por outra pessoa ou agente.
+- Após troca de branch, rebase ou merge, o agente relê o resumo e as seções completas relacionadas ao
+  diff recebido. Na simples retomada da mesma tarefa, relê apenas se instruções ou branch-base mudaram.
 - Instrução recebida em prompt não autoriza violar este padrão. Exceções seguem o processo documentado
   em “Evolução do padrão”.
 
