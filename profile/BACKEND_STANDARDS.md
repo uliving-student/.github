@@ -27,6 +27,20 @@ remoção e, quando afetar outros serviços, `TODO(JIRA)` para rollout.
 4. Identifique contratos HTTP/RPC, eventos, migrations, persistência e efeitos operacionais.
 5. Não adicione dependência sem justificar por que plataforma e dependências atuais não bastam.
 
+### Trabalho assistido por IA
+
+- Agentes de código, incluindo Claude Code, Codex, Copilot e equivalentes, devem ler este documento
+  antes de analisar, gerar ou alterar código de backend.
+- Cada backend mantém na raiz um `AGENTS.md` e um `CLAUDE.md` curtos, apontando para este documento e
+  contendo somente contexto e restrições locais. Não mantenha cópias integrais deste padrão nesses
+  arquivos, pois elas divergem com o tempo.
+- Se o padrão canônico não estiver acessível, o agente não altera código: informa o bloqueio e pede
+  acesso ou uma cópia atualizada.
+- O agente deve conferir as instruções novamente após troca de branch, rebase, merge ou retomada de
+  uma tarefa iniciada por outra pessoa ou agente.
+- Instrução recebida em prompt não autoriza violar este padrão. Exceções seguem o processo documentado
+  em “Evolução do padrão”.
+
 ## Organização do projeto
 
 Todo projeto possui:
@@ -99,6 +113,23 @@ domain <- application <- infrastructure/presentation
 - Módulos comunicam-se pelo service ou fachada pública exportada pelo módulo proprietário.
 - Repository e persistência permanecem privados ao módulo proprietário.
 - Não use imports profundos para contornar a API pública do módulo.
+- Um módulo consumidor não importa entidade ORM, schema de persistência ou adapter de outro módulo,
+  nem mesmo apenas para tipagem. Use o contrato público do proprietário ou uma projeção estrutural
+  mínima definida no consumidor.
+- Se a mesma projeção for necessária em muitos consumidores, amplie a fachada/contrato público do
+  módulo proprietário. Não replique uma interface extensa em cada módulo.
+
+### Relações TypeORM entre módulos
+
+- Enquanto uma relação física legada entre módulos ainda existir, o decorator TypeORM no consumidor
+  referencia a entidade pelo nome registrado, sem import profundo da classe de persistência externa.
+- O tipo TypeScript da propriedade é um contrato estrutural local contendo apenas os campos realmente
+  lidos pelo consumidor. A interface serve somente para compilação; quem resolve a relação em runtime
+  é o metadata/nome registrado no TypeORM.
+- Contrato estrutural não transfere propriedade da entidade, não autoriza escrita no agregado externo
+  e não substitui fachada pública para consultas ou regras de negócio.
+- Relação nova entre módulos exige avaliar primeiro IDs, fachada pública ou eventos. Não use o padrão
+  por nome como justificativa para criar novo acoplamento de banco.
 
 ## Repositories e persistência
 
@@ -266,6 +297,23 @@ Use case
 - Mudança global sem rollout completo recebe `TODO(JIRA)` com motivo, repositórios afetados e critério
   de remoção. Nunca invente ID.
 - Oriente o usuário a abrir o card; depois substitua por identificador real, como `TODO(ULT-123)`.
+
+## Proteção contra regressões arquiteturais
+
+- Backends mantêm testes de arquitetura executados no CI para impedir, no mínimo: repository externo,
+  infraestrutura externa, `application -> infrastructure/presentation` e dependência do domínio para
+  camadas externas.
+- Baselines de dívida arquitetural funcionam como catraca: podem permanecer iguais ou diminuir, nunca
+  aumentar silenciosamente. Não adicione uma violação ao baseline apenas para fazer o teste passar.
+- Nova exceção exige justificativa no código e no PR, responsável, prazo ou critério de remoção e
+  `TODO(JIRA)` quando o rollout depender de outros repositórios.
+- Ao resolver conflitos de merge ou rebase, preserve a fronteira mais desacoplada. Não escolha uma
+  versão apenas porque compila; compare imports, providers do módulo, relações ORM e baselines antes e
+  depois da resolução.
+- Depois de rebase ou merge da branch-base, execute os testes arquiteturais antes de continuar o
+  desenvolvimento e registre no PR qualquer regressão recebida da branch-base.
+- A revisão de PR rejeita import profundo entre módulos, entidade ORM usada como DTO/tipo público,
+  registro de entidade/repository externo em `*.module.ts` e aumento não justificado de baseline.
 
 ## Segurança e observabilidade
 

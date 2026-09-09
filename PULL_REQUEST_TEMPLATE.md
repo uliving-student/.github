@@ -24,6 +24,11 @@
 
 ## Checklist
 
+- [ ] Li o padrão global de back-ends e as instruções locais antes de alterar o código.
+- [ ] Após o último rebase/merge da branch-base, executei novamente os testes arquiteturais aplicáveis.
+- [ ] Não injetei/importei repository, entidade ORM ou infraestrutura pertencente a outro módulo.
+- [ ] Nenhum baseline arquitetural aumentou; qualquer exceção está justificada, tem responsável e
+      critério de remoção.
 - [ ] Testes necessários foram adicionados ou atualizados; caso contrário, justifiquei a ausência.
 - [ ] Lint, typecheck, testes e build aplicáveis foram executados.
 - [ ] A documentação foi atualizada quando necessário.
