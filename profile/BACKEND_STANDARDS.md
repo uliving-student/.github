@@ -23,12 +23,26 @@ remoção e, quando afetar outros serviços, `TODO(JIRA)` para rollout.
 ## Trunk-based development
 
 - `main` é o único trunk e a única branch permanente de integração.
-- Toda mudança parte de `main`, permanece em branch curta e retorna por um único PR para `main`.
+- Features, refactors, chores e documentação partem de `main`, permanecem em branch curta e retornam
+  por um único PR para `main`.
 - Staging é ambiente, não branch. Ambientes recebem o mesmo commit ou artefato imutável.
 - Integre mudanças pequenas e frequentes; use feature flag desativada por padrão quando uma
   funcionalidade ainda não puder ser exposta.
-- Não use branches `develop`, `stage`, `release` ou `hotfix` como linhas paralelas de integração.
-- Correções urgentes seguem o mesmo fluxo para `main`, com revisão e implantação prioritárias.
+- Não use branches `develop`, `stage` ou `release` como linhas paralelas de integração.
+- Branches `fix/*` e `hotfix/*` destinadas a corrigir a versão em produção partem obrigatoriamente da
+  última tag efetivamente implantada, nunca de uma `main` que contenha features ainda em validação.
+- O fix é revisado e validado contra a tag de produção, gera uma nova tag/artefato imutável e é
+  publicado isoladamente. O mesmo commit deve ser reintegrado imediatamente em `main` por PR ou
+  cherry-pick, evitando regressão no próximo release.
+
+## Feature flags para regras de alto impacto
+
+- Mudança de alto impacto em regra de negócio deve avaliar proteção por feature flag.
+- Agentes de IA devem interromper antes da implementação e perguntar explicitamente ao usuário se a
+  feature flag deve ser aplicada. Não presumem a decisão.
+- Quando aprovada, a flag nasce desativada por padrão, possui comportamento anterior seguro e permite
+  ativação, observação e rollback sem novo deploy.
+- A decisão — usar ou não a flag — e a estratégia de ativação/remoção ficam registradas no PR.
 
 ## Antes de alterar
 

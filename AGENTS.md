@@ -16,3 +16,6 @@ e peça acesso ou uma cópia atualizada.
 
 Após rebase, merge ou troca de branch, releia o resumo e as seções completas relacionadas ao diff.
 Na retomada da mesma tarefa, releia somente se as instruções ou a branch-base tiverem mudado.
+
+Antes de implementar mudança de alto impacto em regra de negócio, pergunte explicitamente ao usuário
+se deve usar feature flag e aguarde a decisão.

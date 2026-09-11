@@ -14,7 +14,8 @@ Nosso objetivo é garantir:
 ## Fluxo trunk-based
 
 `main` é o único trunk e a única branch permanente. Não existem branches permanentes `develop`,
-`development`, `stage`, `staging`, `release` ou `hotfix` para promover código entre ambientes.
+`development`, `stage`, `staging` ou `release` para promover código entre ambientes. Branches
+`fix/*` e `hotfix/*` são curtas e seguem o fluxo de produção descrito abaixo.
 
 ```mermaid
 flowchart LR
@@ -77,8 +78,28 @@ chore/ULT-120-ajustar-eslint
 | chore    | tarefas técnicas    |
 | docs     | documentação        |
 
-Branches devem durar o mínimo possível. Correções urgentes seguem o mesmo fluxo `fix/* → main`, com
-prioridade de revisão e deploy, sem criar uma linha paralela de integração.
+Branches devem durar o mínimo possível.
+
+## Fix e hotfix da versão em produção
+
+Quando `main` possuir features ainda em validação, uma correção destinada à versão em produção não
+pode partir dela:
+
+1. Confirmar qual é a última tag efetivamente implantada em produção.
+2. Criar `fix/ULT-123-descricao` ou `hotfix/ULT-123-descricao` a partir dessa tag.
+3. Implementar somente a correção e validar contra a mesma linha de produção.
+4. Revisar o diff, executar o CI e publicar uma nova tag/artefato imutável desse commit.
+5. Promover o artefato corrigido diretamente para produção.
+6. Reintegrar imediatamente o mesmo commit em `main` por PR ou cherry-pick.
+
+Esse fluxo é uma exceção de origem para preservar a versão em produção, não uma branch permanente
+nem uma linha paralela de desenvolvimento.
+
+## Feature flags
+
+Mudança de alto impacto em regra de negócio deve avaliar feature flag. Antes de implementar, agentes
+de IA perguntam explicitamente ao usuário se a proteção deve ser aplicada. A decisão, o estado
+inicial, a estratégia de ativação, observação, rollback e remoção ficam registrados no PR.
 
 ---
 
@@ -88,12 +109,13 @@ Todo código deve passar por **Pull Request** antes de ser integrado.
 
 ## Requisitos obrigatórios
 
-- branch criada de `main` e atualizada com o trunk
+- branch criada de `main`; ou, para `fix/hotfix` de produção, da última tag implantada
 - CI passando
 - descrição clara da mudança
 - link do ticket Jira
 - pelo menos **1 aprovação**
 - um único PR direcionado a `main`
+- decisão sobre feature flag registrada quando houver regra de negócio de alto impacto
 
 ---
 

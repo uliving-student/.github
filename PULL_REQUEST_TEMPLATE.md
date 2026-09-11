@@ -25,6 +25,7 @@
 ## Checklist
 
 - [ ] Li o padrão global de back-ends e as instruções locais antes de alterar o código.
+- [ ] A branch partiu de `main`; ou, se for `fix/hotfix` de produção, da última tag implantada.
 - [ ] Após o último rebase/merge da branch-base, executei novamente os testes arquiteturais aplicáveis.
 - [ ] Não injetei/importei repository, entidade ORM ou infraestrutura pertencente a outro módulo.
 - [ ] Os baselines arquiteturais permanecem zerados; não adicionei exceção, allowlist ou supressão
@@ -38,3 +39,5 @@
 - [ ] Migrations novas foram revisadas e nenhuma migration já aplicada foi alterada.
 - [ ] Alterações incompatíveis de API ou eventos foram identificadas e comunicadas.
 - [ ] O plano de rollback foi considerado para mudanças de maior risco.
+- [ ] Em regra de negócio de alto impacto, avaliei feature flag e registrei a decisão e a estratégia
+      de ativação/rollback.
