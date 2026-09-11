@@ -17,6 +17,9 @@ solicite acesso ou uma cópia atualizada.
 Depois de rebase, merge ou troca de branch, releia o resumo e as seções completas relacionadas ao
 diff. Na retomada da mesma tarefa, releia somente se as instruções ou a branch-base tiverem mudado.
 
+Antes de implementar mudança de alto impacto em regra de negócio, pergunte explicitamente ao usuário
+se deve usar feature flag e aguarde a decisão.
+
 Este arquivo protege trabalhos feitos diretamente no repositório `.github`. Para carregamento
 automático em outro backend, esse backend também deve manter um `CLAUDE.md` na própria raiz apontando
 para o padrão canônico.

@@ -11,71 +11,41 @@ Nosso objetivo é garantir:
 
 ---
 
-## Fluxo
+## Fluxo trunk-based
 
-## 🌳 Git Workflow (stage como ambiente de validação)
-
-```mermaid
-gitGraph
-   commit id: "initial"
-
-   branch stage
-   branch feature/ULT-123
-
-   checkout feature/ULT-123
-   commit id: "development"
-   commit id: "feature ready"
-
-   checkout stage
-   merge feature/ULT-123
-   commit id: "deploy stage"
-
-   checkout main
-   merge feature/ULT-123
-   commit id: "deploy production"
-```
-
-## 🌳 Git Workflow (master → stage → master)
-
-Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
+`main` é o único trunk e a única branch permanente. Não existem branches permanentes `develop`,
+`development`, `stage`, `staging` ou `release` para promover código entre ambientes. Branches
+`fix/*` e `hotfix/*` são curtas e seguem o fluxo de produção descrito abaixo.
 
 ```mermaid
-flowchart TB
-  A[Branch feature/ULT-123<br/>base: master] --> B[PR: feature → stage]
-  B --> C[Deploy automático no ambiente stage]
-  C --> D[QA / Testes / Validação]
-  D -->|Aprovado| E[PR: feature → master]
-  E --> F[Deploy automático em produção]
-  D -->|Reprovado| A
+flowchart LR
+  A[main atualizada] --> B[branch curta do ticket]
+  B --> C[PR único para main]
+  C --> D[CI + revisão]
+  D --> E[merge rápido em main]
+  E --> F[mesmo commit/artefato em staging]
+  F --> G[promoção do mesmo artefato para produção]
 ```
+
+Staging é um ambiente de validação, não uma branch. A promoção entre ambientes usa o mesmo commit ou
+artefato imutável já integrado em `main`; não exige novo merge ou segundo PR.
 
 ---
 
 ## Processo de desenvolvimento
 
-1. Criar branch a partir de **staging**
+1. Atualizar `main` e criar uma branch curta a partir dela.
 
 ```
 feature/ULT-123-descricao
 ```
 
-2. Desenvolver a funcionalidade
-
-3. Abrir Pull Request para **staging**
-
-4. Após merge em staging:
-
-- deploy automático em staging
-- validação funcional
-- testes
-
-5. Após validação:
-
-```
-merge staging → main
-```
-
-6. Deploy em produção
+2. Entregar uma mudança pequena, completa e sempre integrável. Funcionalidade incompleta permanece
+   protegida por feature flag desativada por padrão.
+3. Sincronizar frequentemente com `main` e resolver conflitos enquanto o diff ainda é pequeno.
+4. Abrir um único Pull Request para `main`.
+5. Após CI e aprovação, integrar rapidamente e remover a branch curta.
+6. Validar em staging e promover para produção o mesmo commit/artefato aprovado.
 
 ---
 
@@ -107,7 +77,29 @@ chore/ULT-120-ajustar-eslint
 | refactor | refatoração         |
 | chore    | tarefas técnicas    |
 | docs     | documentação        |
-| hotfix   | correção urgente    |
+
+Branches devem durar o mínimo possível.
+
+## Fix e hotfix da versão em produção
+
+Quando `main` possuir features ainda em validação, uma correção destinada à versão em produção não
+pode partir dela:
+
+1. Confirmar qual é a última tag efetivamente implantada em produção.
+2. Criar `fix/ULT-123-descricao` ou `hotfix/ULT-123-descricao` a partir dessa tag.
+3. Implementar somente a correção e validar contra a mesma linha de produção.
+4. Revisar o diff, executar o CI e publicar uma nova tag/artefato imutável desse commit.
+5. Promover o artefato corrigido diretamente para produção.
+6. Reintegrar imediatamente o mesmo commit em `main` por PR ou cherry-pick.
+
+Esse fluxo é uma exceção de origem para preservar a versão em produção, não uma branch permanente
+nem uma linha paralela de desenvolvimento.
+
+## Feature flags
+
+Mudança de alto impacto em regra de negócio deve avaliar feature flag. Antes de implementar, agentes
+de IA perguntam explicitamente ao usuário se a proteção deve ser aplicada. A decisão, o estado
+inicial, a estratégia de ativação, observação, rollback e remoção ficam registrados no PR.
 
 ---
 
@@ -117,11 +109,13 @@ Todo código deve passar por **Pull Request** antes de ser integrado.
 
 ## Requisitos obrigatórios
 
-- branch atualizada com staging
+- branch criada de `main`; ou, para `fix/hotfix` de produção, da última tag implantada
 - CI passando
 - descrição clara da mudança
 - link do ticket Jira
 - pelo menos **1 aprovação**
+- um único PR direcionado a `main`
+- decisão sobre feature flag registrada quando houver regra de negócio de alto impacto
 
 ---
 

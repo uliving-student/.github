@@ -12,8 +12,12 @@ Na retomada da mesma tarefa, não releia documentos que não mudaram.
 
 1. Leia este resumo, o `AGENTS.md` local, o README e os arquivos afetados.
 2. Verifique `git status` e preserve mudanças fora da tarefa.
-3. Identifique contratos, persistência, eventos e efeitos externos envolvidos.
-4. Após rebase ou merge, confira imports, modules, entidades ORM e baselines antes de continuar.
+3. No fluxo trunk-based, parta de `main`, mantenha a branch curta e abra um único PR para `main`.
+   Para `fix/hotfix` de produção, parta da última tag implantada e reintegre o commit em `main`.
+4. Identifique contratos, persistência, eventos e efeitos externos envolvidos.
+5. Se houver alto impacto em regra de negócio, pergunte ao usuário antes de implementar se deve usar
+   feature flag e registre a decisão no PR.
+6. Após rebase ou merge, confira imports, modules, entidades ORM e baselines antes de continuar.
 
 ## Fronteiras obrigatórias
 
