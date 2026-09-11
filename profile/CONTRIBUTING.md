@@ -16,6 +16,9 @@ Este guia descreve como colaborar nos repositórios da uliving.
 
 Siga o padrão descrito em [ENGINEERING.md](ENGINEERING.md#-padrão-de-branch-jira).
 
+O fluxo é trunk-based: crie uma branch curta a partir de `main` e abra um único PR de volta para
+`main`. Staging é ambiente, não branch de integração.
+
 ---
 
 ## 🔀 Pull Requests

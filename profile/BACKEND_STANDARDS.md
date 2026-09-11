@@ -20,6 +20,16 @@ remoção e, quando afetar outros serviços, `TODO(JIRA)` para rollout.
 - Preserve contratos públicos e planeje compatibilidade antes de mudanças incompatíveis.
 - Não faça refatoração ampla fora do escopo da tarefa.
 
+## Trunk-based development
+
+- `main` é o único trunk e a única branch permanente de integração.
+- Toda mudança parte de `main`, permanece em branch curta e retorna por um único PR para `main`.
+- Staging é ambiente, não branch. Ambientes recebem o mesmo commit ou artefato imutável.
+- Integre mudanças pequenas e frequentes; use feature flag desativada por padrão quando uma
+  funcionalidade ainda não puder ser exposta.
+- Não use branches `develop`, `stage`, `release` ou `hotfix` como linhas paralelas de integração.
+- Correções urgentes seguem o mesmo fluxo para `main`, com revisão e implantação prioritárias.
+
 ## Antes de alterar
 
 1. Leia o `BACKEND_STANDARDS_QUICK.md`, o `AGENTS.md` local, o README do módulo e o código afetado.

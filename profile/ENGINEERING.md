@@ -11,71 +11,40 @@ Nosso objetivo é garantir:
 
 ---
 
-## Fluxo
+## Fluxo trunk-based
 
-## 🌳 Git Workflow (stage como ambiente de validação)
-
-```mermaid
-gitGraph
-   commit id: "initial"
-
-   branch stage
-   branch feature/ULT-123
-
-   checkout feature/ULT-123
-   commit id: "development"
-   commit id: "feature ready"
-
-   checkout stage
-   merge feature/ULT-123
-   commit id: "deploy stage"
-
-   checkout main
-   merge feature/ULT-123
-   commit id: "deploy production"
-```
-
-## 🌳 Git Workflow (master → stage → master)
-
-Nosso fluxo segue um modelo próximo ao **Trunk-Based Development**, utilizando um ambiente de **staging** para validação antes da promoção para produção.
+`main` é o único trunk e a única branch permanente. Não existem branches permanentes `develop`,
+`development`, `stage`, `staging`, `release` ou `hotfix` para promover código entre ambientes.
 
 ```mermaid
-flowchart TB
-  A[Branch feature/ULT-123<br/>base: master] --> B[PR: feature → stage]
-  B --> C[Deploy automático no ambiente stage]
-  C --> D[QA / Testes / Validação]
-  D -->|Aprovado| E[PR: feature → master]
-  E --> F[Deploy automático em produção]
-  D -->|Reprovado| A
+flowchart LR
+  A[main atualizada] --> B[branch curta do ticket]
+  B --> C[PR único para main]
+  C --> D[CI + revisão]
+  D --> E[merge rápido em main]
+  E --> F[mesmo commit/artefato em staging]
+  F --> G[promoção do mesmo artefato para produção]
 ```
+
+Staging é um ambiente de validação, não uma branch. A promoção entre ambientes usa o mesmo commit ou
+artefato imutável já integrado em `main`; não exige novo merge ou segundo PR.
 
 ---
 
 ## Processo de desenvolvimento
 
-1. Criar branch a partir de **staging**
+1. Atualizar `main` e criar uma branch curta a partir dela.
 
 ```
 feature/ULT-123-descricao
 ```
 
-2. Desenvolver a funcionalidade
-
-3. Abrir Pull Request para **staging**
-
-4. Após merge em staging:
-
-- deploy automático em staging
-- validação funcional
-- testes
-
-5. Após validação:
-
-```
-merge staging → main
-```
-
-6. Deploy em produção
+2. Entregar uma mudança pequena, completa e sempre integrável. Funcionalidade incompleta permanece
+   protegida por feature flag desativada por padrão.
+3. Sincronizar frequentemente com `main` e resolver conflitos enquanto o diff ainda é pequeno.
+4. Abrir um único Pull Request para `main`.
+5. Após CI e aprovação, integrar rapidamente e remover a branch curta.
+6. Validar em staging e promover para produção o mesmo commit/artefato aprovado.
 
 ---
 
@@ -107,7 +76,9 @@ chore/ULT-120-ajustar-eslint
 | refactor | refatoração         |
 | chore    | tarefas técnicas    |
 | docs     | documentação        |
-| hotfix   | correção urgente    |
+
+Branches devem durar o mínimo possível. Correções urgentes seguem o mesmo fluxo `fix/* → main`, com
+prioridade de revisão e deploy, sem criar uma linha paralela de integração.
 
 ---
 
@@ -117,11 +88,12 @@ Todo código deve passar por **Pull Request** antes de ser integrado.
 
 ## Requisitos obrigatórios
 
-- branch atualizada com staging
+- branch criada de `main` e atualizada com o trunk
 - CI passando
 - descrição clara da mudança
 - link do ticket Jira
 - pelo menos **1 aprovação**
+- um único PR direcionado a `main`
 
 ---
 
