@@ -116,6 +116,7 @@ Todo código deve passar por **Pull Request** antes de ser integrado.
 - pelo menos **1 aprovação**
 - um único PR direcionado a `main`
 - decisão sobre feature flag registrada quando houver regra de negócio de alto impacto
+- diagrama Mermaid do plano de código que implementa a regra de negócio no corpo do PR
 
 ---
 
@@ -130,6 +131,12 @@ Explique o problema.
 ### O que foi feito
 
 Lista objetiva das mudanças.
+
+### Fluxo no código
+
+Diagrama Mermaid (`flowchart` ou `sequenceDiagram`) com os nomes reais de funções, serviços e
+arquivos que implementam a regra de negócio. O que é novo no PR fica em verde, e o mesmo diagrama vai
+para o `README.md` do módulo.
 
 ### Como testar
 
