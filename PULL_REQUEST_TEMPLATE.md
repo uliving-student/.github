@@ -10,6 +10,22 @@
 
 -
 
+## Fluxo no código
+
+<!-- Diagrama Mermaid do plano de código que implementa a regra de negócio, com nomes reais de
+funções, serviços e arquivos. Em verde, o que é novo neste PR. Se não se aplica, explique. -->
+
+```mermaid
+flowchart TD
+    A(["entrada"]) --> B["função ou serviço real"]
+    B --> C(["saída"])
+
+    classDef neutro fill:#f0efea,stroke:#888780,color:#444441
+    classDef novo fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+    class A,C neutro
+    class B novo
+```
+
 ## Como testar
 
 1.
@@ -34,6 +50,7 @@
 - [ ] Testes necessários foram adicionados ou atualizados; caso contrário, justifiquei a ausência.
 - [ ] Lint, typecheck, testes e build aplicáveis foram executados.
 - [ ] A documentação foi atualizada quando necessário.
+- [ ] O PR tem o diagrama Mermaid do plano de código e o mesmo diagrama está no README do módulo.
 - [ ] Não deixei correção arquitetural para TODO, card ou PR posterior.
 - [ ] Não foram incluídos segredos nem dados pessoais, financeiros ou de produção.
 - [ ] Migrations novas foram revisadas e nenhuma migration já aplicada foi alterada.

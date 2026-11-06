@@ -319,6 +319,14 @@ Use case
   configuração, evento, ambiente ou fluxo.
 - Use Mermaid quando fluxo, sequência, estado, integração ou dependência ficar mais claro com
   diagrama. Não use quando lista curta for suficiente e mantenha o desenho sincronizado.
+- Todo PR de backend deve ter, no corpo, ao menos um diagrama Mermaid (`flowchart` ou
+  `sequenceDiagram`) do plano de código que implementa a regra de negócio, com nomes reais de
+  funções, serviços e arquivos. O diagrama representa o código entregue, não a proposta inicial, e
+  destaca em verde o que é novo no PR. Se o fluxo de negócio for bem diferente do técnico, inclua um
+  segundo diagrama conceitual. O mesmo diagrama entra no `README.md` do módulo alterado. Para
+  mudança sem fluxo de código (por exemplo, só documentação), o PR informa que não se aplica.
+- Diagramas não contêm credenciais, tokens nem dados pessoais. Padrão visual: cinza neutro, verde
+  para o que roda em paralelo ou é novo, amarelo para o sequencial e vermelho para erro.
 
 ### Evolução do padrão
 

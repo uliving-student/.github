@@ -47,6 +47,12 @@ Na retomada da mesma tarefa, não releia documentos que não mudaram.
 - Não exponha nem registre segredo, token, documento ou dado pessoal completo.
 - Não execute deploy, consumer, importação, sincronização ou efeito externo automaticamente.
 
+## Pull request
+
+- O corpo do PR leva um diagrama Mermaid do plano de código que implementa a regra de negócio, com
+  nomes reais de funções, serviços e arquivos, e o mesmo diagrama no `README.md` do módulo.
+- O diagrama mostra o código entregue, com o que é novo em verde, e não contém dados sensíveis.
+
 ## Validação
 
 - Execute testes focados e lint nos arquivos alterados.
