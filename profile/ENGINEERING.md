@@ -292,6 +292,8 @@ MAJOR.MINOR.PATCH
 Boas práticas:
 
 - nunca commitar secrets
+- token do GitHub Packages só pela variável `NODE_AUTH_TOKEN`; veja
+  [NPM_PACKAGES_PRIVADOS.md](NPM_PACKAGES_PRIVADOS.md). Os serviços têm o check **Secret guard**
 - validar inputs
 - sanitizar logs
 - manter dependências atualizadas

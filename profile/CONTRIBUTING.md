@@ -33,6 +33,8 @@ Siga o processo descrito em [ENGINEERING.md](ENGINEERING.md#-pull-request-pr).
 - Rode testes e linters localmente quando possível
 - Garanta que pipelines estejam verdes
 - Documente mudanças que impactem operação/suporte
+- Não coloque token ou senha em arquivo do repositório. Para instalar pacotes privados, veja
+  [NPM_PACKAGES_PRIVADOS.md](NPM_PACKAGES_PRIVADOS.md)
 
 ---
 
