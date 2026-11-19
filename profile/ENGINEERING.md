@@ -305,6 +305,19 @@ Boas práticas:
 - sanitizar logs
 - manter dependências atualizadas
 
+## Acesso a banco de ambiente remoto
+
+Para usar o banco de staging ou de produção a partir da máquina local:
+
+- use o **Cloud SQL Auth Proxy**, que autentica com a conta Google e escuta só em `127.0.0.1`; não
+  libere o IP da máquina na instância
+- produção só com usuário de **leitura**, nunca com `root` ou com usuário de escrita
+- não aponte a sincronização automática de schema do ORM, migrations ou seeds para um banco
+  compartilhado
+- credenciais ficam fora do git; peça-as ao time
+
+O passo a passo fica na documentação interna de infraestrutura.
+
 ---
 
 # ✅ Definition of Done
